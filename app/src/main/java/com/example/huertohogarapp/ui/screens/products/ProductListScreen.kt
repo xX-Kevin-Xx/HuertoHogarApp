@@ -25,14 +25,12 @@ fun ProductListScreen(
     viewModel: ProductViewModel = viewModel(),
     onProductClick: (Product) -> Unit
 ) {
-    // Observamos el flujo de productos del ViewModel
     val products by viewModel.products.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.loadProducts()
     }
 
-    // UI
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -61,7 +59,6 @@ fun ProductItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            // Imagen - si por ahora no tienes URL, solo evitamos el crash
             if (product.imageUrl.isNotBlank()) {
                 Image(
                     painter = rememberAsyncImagePainter(product.imageUrl),

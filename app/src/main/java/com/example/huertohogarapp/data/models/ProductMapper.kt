@@ -10,6 +10,6 @@ fun ProductDto.toEntity(): Product {
         description = this.descripcion,
         category = this.categoria,
         stock = this.stock,
-        imageRes = 0 // por ahora, sin imágenes
+        imageRes = 0
     )
 }

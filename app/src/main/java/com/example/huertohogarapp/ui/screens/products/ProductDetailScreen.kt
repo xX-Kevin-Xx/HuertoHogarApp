@@ -49,7 +49,6 @@ fun ProductDetailScreen(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                // Imagen del producto
                 if (product.imageRes != null) {
                     Image(
                         painter = painterResource(id = product.imageRes!!),

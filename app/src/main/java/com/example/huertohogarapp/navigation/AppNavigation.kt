@@ -7,17 +7,23 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.huertohogarapp.data.remote.RetrofitClient.productApi
 import com.example.huertohogarapp.ui.screens.HomeScreen
 import com.example.huertohogarapp.ui.screens.WelcomeScreen
 import com.example.huertohogarapp.ui.screens.auth.LoginScreen
 import com.example.huertohogarapp.ui.screens.auth.RegisterScreen
 import com.example.huertohogarapp.ui.screens.WelcomeScreen
+import com.example.huertohogarapp.ui.screens.admin.AdminPanelScreen
+import com.example.huertohogarapp.ui.screens.admin.AdminProductsScreen
+import com.example.huertohogarapp.ui.screens.admin.AdminUsersScreen
 import com.example.huertohogarapp.ui.screens.products.ProductListScreen
 import com.example.huertohogarapp.ui.screens.cart.CartScreen
 import com.example.huertohogarapp.ui.screens.products.ProductDetailScreen
 import com.example.huertohogarapp.viewmodel.CartViewModel
 import com.example.huertohogarapp.viewmodel.ProductViewModel
 import com.example.huertohogarapp.viewmodel.UserViewModel
+import com.example.huertohogarapp.viewmodels.AdminUserViewModel
+import com.example.huertohogarapp.viewmodels.AuthViewModel
 
 sealed class Screen(val route: String) {
     object Login : Screen("login")
@@ -28,13 +34,13 @@ sealed class Screen(val route: String) {
 
 @Composable
 fun AppNavigation(
-    productViewModel: ProductViewModel,     // 👉 ViewModel que viene desde MainActivity
+    productViewModel: ProductViewModel,
 ) {
     val navController = rememberNavController()
 
-    // Estos ViewModels sí se crean internos (no usan factory)
     val cartViewModel: CartViewModel = viewModel()
     val userViewModel: UserViewModel = viewModel()
+    val authViewModel: AuthViewModel = viewModel()
 
     NavHost(
         navController = navController,
@@ -61,7 +67,8 @@ fun AppNavigation(
         composable(Screen.Login.route) {
             LoginScreen(
                 navController = navController,
-                userViewModel = userViewModel
+                userViewModel = userViewModel,
+                authViewModel = authViewModel
             )
         }
 
@@ -103,5 +110,32 @@ fun AppNavigation(
                 )
             }
         }
+
+        composable("adminPanel") {
+            AdminPanelScreen(
+                navController = navController,
+                authViewModel = authViewModel
+            )
+        }
+
+
+        composable("adminProducts") {
+            AdminProductsScreen(
+                navController = navController,
+                productApi = productApi
+            )
+        }
+
+        composable("adminUsers") {
+            val adminUserVm: AdminUserViewModel = viewModel()
+
+            AdminUsersScreen(
+                navController = navController,
+                viewModel = adminUserVm,
+                authViewModel = authViewModel
+            )
+        }
+
+
     }
 }

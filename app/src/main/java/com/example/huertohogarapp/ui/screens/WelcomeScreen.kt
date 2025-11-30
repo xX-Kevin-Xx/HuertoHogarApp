@@ -73,7 +73,7 @@ fun WelcomeScreen(navController: NavController) {
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF2E7D32), // verde oscuro bonito
+                    containerColor = Color(0xFF2E7D32),
                     contentColor = Color.White
                 )
             ) {
@@ -88,7 +88,7 @@ fun WelcomeScreen(navController: NavController) {
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF2E7D32), // verde oscuro bonito
+                    containerColor = Color(0xFF2E7D32),
                     contentColor = Color.White
                 )
             ) {
@@ -103,7 +103,7 @@ fun WelcomeScreen(navController: NavController) {
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF2E7D32), // verde oscuro bonito
+                    containerColor = Color(0xFF2E7D32),
                     contentColor = Color.White
                 )
             ) {

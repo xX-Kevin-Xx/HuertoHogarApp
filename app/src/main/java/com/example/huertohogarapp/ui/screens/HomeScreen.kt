@@ -32,13 +32,11 @@ fun HomeScreen(
     onProductClick: (Product) -> Unit,
     onNavigateToCart: () -> Unit
 ) {
-    // CORREGIDO: usar products en lugar de productList
     val productList by viewModel.products.collectAsState()
     val itemCount by cartViewModel.cartItemCount.collectAsState(initial = 0)
     var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
     var selectedCategory by remember { mutableStateOf("Todas") }
 
-    // Cargar productos al entrar
     LaunchedEffect(Unit) {
         viewModel.loadProducts()
     }
@@ -103,7 +101,6 @@ fun HomeScreen(
                 .background(Color(0xFFE8F5E9))
                 .padding(padding)
         ) {
-            // Buscador
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
@@ -119,7 +116,6 @@ fun HomeScreen(
 
             val scrollState = rememberScrollState()
 
-            // Categorías
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

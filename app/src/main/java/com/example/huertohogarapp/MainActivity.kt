@@ -17,7 +17,6 @@ import com.example.huertohogarapp.navigation.AppNavigation
 
 class MainActivity : ComponentActivity() {
 
-    // --- Inicializamos el ViewModel aquí ---
     private val productViewModel: ProductViewModel by viewModels {
         val dao = AppDatabase.getDatabase(this).productDao()
         val repo = ProductRepository(dao)
@@ -33,7 +32,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // 👉 Pasamos el ViewModel a la navegación
                     AppNavigation(productViewModel)
                 }
             }

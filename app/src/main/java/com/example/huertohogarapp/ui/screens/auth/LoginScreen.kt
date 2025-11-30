@@ -15,18 +15,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.huertohogarapp.viewmodel.UserViewModel
+import com.example.huertohogarapp.viewmodels.AuthViewModel
 import com.example.huertohogarapp.R
 import com.example.huertohogarapp.ui.components.BackButton
 
 @Composable
 fun LoginScreen(
     navController: NavController,
-    userViewModel: UserViewModel
+    userViewModel: UserViewModel,
+    authViewModel: AuthViewModel
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
+
+    val token by authViewModel.token.collectAsState()
+    val authError by authViewModel.error.collectAsState()
+
+    LaunchedEffect(token) {
+        if (token != null) {
+            navController.navigate("adminPanel")
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -48,6 +59,7 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+
             Text(
                 text = "Iniciar Sesión",
                 color = Color.White,
@@ -80,16 +92,18 @@ fun LoginScreen(
                 onValueChange = { password = it },
                 label = { Text("Contraseña") },
                 singleLine = true,
-                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                visualTransformation = if (passwordVisible)
+                    VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
                     val icon = if (passwordVisible)
                         painterResource(id = R.drawable.ojo_cerrado)
                     else
                         painterResource(id = R.drawable.ojo_abierto)
+
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(
                             painter = icon,
-                            contentDescription = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña",
+                            contentDescription = "Toggle password",
                             tint = Color.White
                         )
                     }
@@ -110,16 +124,12 @@ fun LoginScreen(
 
             Button(
                 onClick = {
-                    if (email.isBlank()) {
-                        errorMessage = "Por favor ingresa un correo válido."
-                    } else {
-                        val user = userViewModel.currentUser.value
-                        if (user == null || user.email != email) {
-                            errorMessage = "Usuario no registrado."
-                        } else {
-                            navController.navigate("home")
-                        }
+                    if (email.isBlank() || password.isBlank()) {
+                        errorMessage = "Completa todos los campos."
+                        return@Button
                     }
+
+                    authViewModel.login(email, password)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                 modifier = Modifier.fillMaxWidth()
@@ -133,26 +143,12 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            errorMessage?.let { msg ->
+            (authError ?: errorMessage)?.let { msg ->
                 Text(
                     text = msg,
                     color = Color.White,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(top = 8.dp)
                 )
-
-                if (msg == "Usuario no registrado.") {
-                    Button(
-                        onClick = { navController.navigate("register") },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF388E3C)),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Registrarse ahora",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
             }
         }
     }
