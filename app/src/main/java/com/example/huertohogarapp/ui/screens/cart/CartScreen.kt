@@ -59,7 +59,7 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel) {
                     items(cartItems) { item ->
                         Card(
                             modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.cardColors(containerColor = Color(0xFFDFFFE0)) // verde suave
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFFDFFFE0))
                         ) {
                             Row(
                                 modifier = Modifier
@@ -67,15 +67,23 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel) {
                                     .padding(8.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                val imageRes = item.imageRes ?: R.drawable.placeholder
-
-                                Image(
-                                    painter = painterResource(id = imageRes),
-                                    contentDescription = item.productName,
-                                    modifier = Modifier
-                                        .size(64.dp)
-                                        .padding(end = 8.dp)
-                                )
+                                if (item.imageUrl.isNotBlank()) {
+                                    AsyncImage(
+                                        model = item.imageUrl,
+                                        contentDescription = item.productName,
+                                        modifier = Modifier
+                                            .size(64.dp)
+                                            .padding(end = 8.dp)
+                                    )
+                                } else {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.placeholder),
+                                        contentDescription = item.productName,
+                                        modifier = Modifier
+                                            .size(64.dp)
+                                            .padding(end = 8.dp)
+                                    )
+                                }
 
                                 Column(
                                     modifier = Modifier

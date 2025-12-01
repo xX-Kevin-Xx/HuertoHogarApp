@@ -10,7 +10,7 @@ class ProductRepository(private val dao: ProductDao) {
         val remoteProducts = RetrofitClient.productApi.getProducts()
 
         val entities = remoteProducts.map { dto ->
-            dto.toProductEntity(defaultImageRes)
+            dto.toProductEntity()
         }
 
         dao.clearAll()

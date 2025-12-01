@@ -102,6 +102,17 @@ fun AdminPanelScreen(
                     ) {
                         Text("Administrar Productos", color = Color.White)
                     }
+
+                    Spacer(Modifier.height(10.dp))
+
+                    Button(
+                        onClick = { navController.navigate("adminAddProduct") },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
+                    ) {
+                        Text("Agregar Producto", color = Color.White)
+                    }
+
                 }
             }
 

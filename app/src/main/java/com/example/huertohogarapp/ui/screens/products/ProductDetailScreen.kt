@@ -44,42 +44,72 @@ fun ProductDetailScreen(
         Column(
             modifier = Modifier
                 .padding(padding)
-                .padding(16.dp)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                if (product.imageRes != null) {
-                    Image(
-                        painter = painterResource(id = product.imageRes!!),
-                        contentDescription = product.name,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(250.dp),
-                        contentScale = ContentScale.Crop
-                    )
-                } else {
-                    AsyncImage(
-                        model = product.imageUrl ?: "",
-                        contentDescription = product.name,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(250.dp),
-                        contentScale = ContentScale.Crop
-                    )
-                }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                AsyncImage(
+                    model = product.imageUrl,
+                    contentDescription = product.name,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(250.dp),
+                    contentScale = ContentScale.Crop
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(product.name, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-                Text(product.formatPrice(), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(product.description)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text("Categoría: ${product.category}", style = MaterialTheme.typography.labelMedium)
-                Text("Disponibles: ${product.stock}", style = MaterialTheme.typography.labelMedium)
+
+                Text(
+                    product.name,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.primary
+                )
+
+                Text(
+                    product.formatPrice(),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color(0xFF2E7D32),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    product.description,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    "Categoría: ${product.category}",
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Text(
+                    "Stock disponible: ${product.stock}",
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
 
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Button(
                         onClick = { if (quantity > 1) quantity-- },
@@ -90,7 +120,7 @@ fun ProductDetailScreen(
 
                     Text(
                         text = quantity.toString(),
-                        modifier = Modifier.padding(horizontal = 16.dp),
+                        modifier = Modifier.padding(horizontal = 20.dp),
                         style = MaterialTheme.typography.titleMedium
                     )
 
@@ -102,7 +132,7 @@ fun ProductDetailScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
                     onClick = {
@@ -110,8 +140,7 @@ fun ProductDetailScreen(
                             productId = product.id,
                             productName = product.name,
                             price = product.price,
-                            quantity = quantity,
-                            imageRes = product.imageRes
+                            quantity = quantity
                         )
                         cartViewModel.addItem(cartItem)
                         navController.popBackStack()
@@ -122,7 +151,6 @@ fun ProductDetailScreen(
                     Text("Agregar al carrito", color = Color.White)
                 }
             }
-
         }
     }
 }

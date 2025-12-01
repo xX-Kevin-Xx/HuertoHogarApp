@@ -1,11 +1,10 @@
 package com.example.huertohogarapp.data.remote.dto
 
-data class ProductDto(
-    val id: Long? = null,
+data class CreateProductRequest(
     val nombre: String,
     val descripcion: String,
     val precio: Double,
     val categoria: String,
     val stock: Int,
-    val imagenUrl: String? = null
+    val imagenUrl: String
 )

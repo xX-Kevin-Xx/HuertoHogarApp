@@ -11,9 +11,7 @@ data class Product(
     val description: String,
     val category: String,
     val stock: Int,
-    val imageUrl: String = "",
-    val imageRes: Int
-
+    val imageUrl: String = ""
 ) {
     fun formatPrice(): String = "$${String.format("%.0f", price)} CLP"
 }

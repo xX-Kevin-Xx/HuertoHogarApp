@@ -39,16 +39,8 @@ fun ProductCard(
                 .background(Color(0xFFE8F5E9))
                 .padding(8.dp)
         ) {
-            if (product.imageRes != null) {
-                Image(
-                    painter = painterResource(id = product.imageRes),
-                    contentDescription = product.name,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(100.dp)
-                )
-            } else if (!product.imageUrl.isNullOrEmpty()) {
+
+            if (product.imageUrl.isNotBlank()) {
                 AsyncImage(
                     model = product.imageUrl,
                     contentDescription = product.name,

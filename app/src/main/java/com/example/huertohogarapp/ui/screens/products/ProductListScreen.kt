@@ -1,6 +1,7 @@
 package com.example.huertohogarapp.ui.screens.products
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,9 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.huertohogarapp.data.models.Product
 import com.example.huertohogarapp.viewmodel.ProductViewModel
@@ -52,21 +55,21 @@ fun ProductItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Row(
             modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            if (product.imageUrl.isNotBlank()) {
-                Image(
-                    painter = rememberAsyncImagePainter(product.imageUrl),
-                    contentDescription = product.name,
-                    modifier = Modifier.size(80.dp),
-                    contentScale = ContentScale.Crop
-                )
-            }
+            AsyncImage(
+                model = if (product.imageUrl.isNotBlank()) product.imageUrl else R.drawable.placeholder,
+                contentDescription = product.name,
+                modifier = Modifier
+                    .size(90.dp)
+                    .background(Color.LightGray.copy(alpha = 0.2f)),
+                contentScale = ContentScale.Crop
+            )
 
             Spacer(modifier = Modifier.width(12.dp))
 
@@ -81,7 +84,8 @@ fun ProductItem(
                 )
                 Text(
                     text = "Stock: ${product.stock}",
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.Gray
                 )
             }
         }

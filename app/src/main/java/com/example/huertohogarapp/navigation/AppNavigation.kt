@@ -8,20 +8,24 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.huertohogarapp.data.remote.RetrofitClient.productApi
+import com.example.huertohogarapp.data.remote.dto.ProductDto
 import com.example.huertohogarapp.ui.screens.HomeScreen
 import com.example.huertohogarapp.ui.screens.WelcomeScreen
 import com.example.huertohogarapp.ui.screens.auth.LoginScreen
 import com.example.huertohogarapp.ui.screens.auth.RegisterScreen
 import com.example.huertohogarapp.ui.screens.WelcomeScreen
+import com.example.huertohogarapp.ui.screens.admin.AdminAddProductScreen
 import com.example.huertohogarapp.ui.screens.admin.AdminPanelScreen
 import com.example.huertohogarapp.ui.screens.admin.AdminProductsScreen
 import com.example.huertohogarapp.ui.screens.admin.AdminUsersScreen
+import com.example.huertohogarapp.ui.screens.admin.EditProductScreen
 import com.example.huertohogarapp.ui.screens.products.ProductListScreen
 import com.example.huertohogarapp.ui.screens.cart.CartScreen
 import com.example.huertohogarapp.ui.screens.products.ProductDetailScreen
 import com.example.huertohogarapp.viewmodel.CartViewModel
 import com.example.huertohogarapp.viewmodel.ProductViewModel
 import com.example.huertohogarapp.viewmodel.UserViewModel
+import com.example.huertohogarapp.viewmodels.AdminProductViewModel
 import com.example.huertohogarapp.viewmodels.AdminUserViewModel
 import com.example.huertohogarapp.viewmodels.AuthViewModel
 
@@ -134,6 +138,22 @@ fun AppNavigation(
                 viewModel = adminUserVm,
                 authViewModel = authViewModel
             )
+        }
+
+        composable("adminAddProduct") {
+            val adminProductVm: AdminProductViewModel = viewModel()
+            AdminAddProductScreen(
+                navController = navController,
+                viewModel = adminProductVm
+            )
+        }
+
+        composable(
+            "editProduct/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.LongType })
+        ) {
+            val id = it.arguments?.getLong("id") ?: 0L
+            EditProductScreen(navController, productApi, id)
         }
 
 

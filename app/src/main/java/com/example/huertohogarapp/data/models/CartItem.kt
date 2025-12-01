@@ -9,7 +9,7 @@ data class CartItem(
     val productName: String,
     val price: Double,
     val quantity: Int,
-    val imageRes: Int? = null
+    val imageUrl: String = ""
 ){
     fun subtotal(): Double = price * quantity
 
