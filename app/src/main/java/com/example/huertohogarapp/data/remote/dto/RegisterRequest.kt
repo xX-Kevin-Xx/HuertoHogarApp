@@ -1,12 +1,9 @@
 package com.example.huertohogarapp.data.remote.dto
 
-data class LoginResponse(
-    val token: String,
-    val rol: String,
+data class RegisterRequest(
     val nombre: String,
     val correo: String,
+    val password: String,
     val telefono: String,
-    val direccion: String,
-    val message: String
+    val direccion: String
 )
-

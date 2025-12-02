@@ -14,15 +14,14 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.huertohogarapp.data.models.User
-import com.example.huertohogarapp.viewmodel.UserViewModel
 import com.example.huertohogarapp.R
 import com.example.huertohogarapp.ui.components.BackButton
+import com.example.huertohogarapp.viewmodels.AuthViewModel
 
 @Composable
 fun RegisterScreen(
     navController: NavController,
-    userViewModel: UserViewModel
+    authViewModel: AuthViewModel
 ) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -30,8 +29,15 @@ fun RegisterScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     var address by remember { mutableStateOf("") }
     var phone by remember { mutableStateOf("") }
-    var country by remember { mutableStateOf("") }
-    var message by remember { mutableStateOf<String?>(null) }
+
+    val registerSuccess by authViewModel.registerSuccess.collectAsState()
+    val error by authViewModel.error.collectAsState()
+
+    LaunchedEffect(registerSuccess) {
+        if (registerSuccess) {
+            navController.popBackStack()
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -44,13 +50,13 @@ fun RegisterScreen(
                 .align(Alignment.TopStart)
                 .padding(16.dp)
         )
+
         Column(
             modifier = Modifier
                 .align(Alignment.Center)
                 .fillMaxWidth()
                 .padding(horizontal = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
             Text(
@@ -66,38 +72,22 @@ fun RegisterScreen(
                 onValueChange = { name = it },
                 label = { Text("Nombre completo") },
                 singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.White,
-                    unfocusedBorderColor = Color.White,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White,
-                    cursorColor = Color.White,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White
-                ),
+                colors = outlinedColors(),
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(Modifier.height(12.dp))
 
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
                 label = { Text("Correo electrónico") },
                 singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.White,
-                    unfocusedBorderColor = Color.White,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White,
-                    cursorColor = Color.White,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White
-                ),
+                colors = outlinedColors(),
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(Modifier.height(12.dp))
 
             OutlinedTextField(
                 value = password,
@@ -110,100 +100,55 @@ fun RegisterScreen(
                         painterResource(id = R.drawable.ojo_cerrado)
                     else
                         painterResource(id = R.drawable.ojo_abierto)
+
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(
                             painter = icon,
-                            contentDescription = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña",
+                            contentDescription = null,
                             tint = Color.White
                         )
                     }
                 },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.White,
-                    unfocusedBorderColor = Color.White,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White,
-                    cursorColor = Color.White,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White
-                ),
+                colors = outlinedColors(),
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(Modifier.height(12.dp))
 
             OutlinedTextField(
                 value = address,
                 onValueChange = { address = it },
-                label = { Text("Dirección (opcional)") },
+                label = { Text("Dirección") },
                 singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.White,
-                    unfocusedBorderColor = Color.White,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White,
-                    cursorColor = Color.White,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White
-                ),
+                colors = outlinedColors(),
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(Modifier.height(12.dp))
 
             OutlinedTextField(
                 value = phone,
                 onValueChange = { phone = it },
-                label = { Text("Teléfono (opcional)") },
+                label = { Text("Teléfono") },
                 singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.White,
-                    unfocusedBorderColor = Color.White,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White,
-                    cursorColor = Color.White,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White
-                ),
+                colors = outlinedColors(),
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            OutlinedTextField(
-                value = country,
-                onValueChange = { country = it },
-                label = { Text("País") },
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color.White,
-                    unfocusedBorderColor = Color.White,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White,
-                    cursorColor = Color.White,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(Modifier.height(20.dp))
 
             Button(
                 onClick = {
                     if (name.isBlank() || email.isBlank() || password.isBlank()) {
-                        message = "Por favor completa los campos obligatorios."
+                        authViewModel.setAuthError("Por favor completa los campos obligatorios.")
                     } else {
-                        val newUser = User(
-                            id = email,
-                            email = email,
-                            name = name,
-                            address = address,
-                            phone = phone,
-                            pais = country
+                        authViewModel.register(
+                            nombre = name,
+                            correo = email,
+                            password = password,
+                            telefono = phone,
+                            direccion = address
                         )
-                        userViewModel.register(newUser)
-                        message = "Registro exitoso. Ahora puedes iniciar sesión."
                     }
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.White),
@@ -216,29 +161,26 @@ fun RegisterScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
 
-            message?.let { msg ->
+            error?.let {
                 Text(
-                    text = msg,
+                    text = it,
                     color = Color.White,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier.padding(top = 8.dp)
                 )
-
-                if (msg.startsWith("Registro exitoso")) {
-                    Button(
-                        onClick = { navController.navigate("login") },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF388E3C)),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Ir a iniciar sesión",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
             }
         }
     }
 }
+
+@Composable
+private fun outlinedColors() = OutlinedTextFieldDefaults.colors(
+    focusedBorderColor = Color.White,
+    unfocusedBorderColor = Color.White,
+    focusedLabelColor = Color.White,
+    unfocusedLabelColor = Color.White,
+    cursorColor = Color.White,
+    focusedTextColor = Color.White,
+    unfocusedTextColor = Color.White
+)

@@ -28,22 +28,34 @@ fun LoginScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
 
     val token by authViewModel.token.collectAsState()
-    val authError by authViewModel.error.collectAsState()
+    val loginError by authViewModel.error.collectAsState()
 
-    LaunchedEffect(token) {
-        if (token != null) {
-            navController.navigate("adminPanel")
+    val role by authViewModel.role.collectAsState()
+
+    LaunchedEffect(token, role) {
+        if (token != null && role != null) {
+            if (role == "ADMIN") {
+                navController.navigate("adminPanel") {
+                    popUpTo("login") { inclusive = true }
+                }
+            } else {
+                navController.navigate("home") {
+                    popUpTo("login") { inclusive = true }
+                }
+            }
         }
     }
+
+    val isUserNotRegistered = loginError == "NO_AUTH"
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF4CAF50))
     ) {
+
         BackButton(
             navController = navController,
             modifier = Modifier
@@ -51,13 +63,55 @@ fun LoginScreen(
                 .padding(16.dp)
         )
 
+        if (isUserNotRegistered) {
+            Column(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                Text(
+                    "Usuario no registrado o contraseña incorrecta",
+                    color = Color.White,
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 30.dp)
+                )
+
+                Button(
+                    onClick = {
+                        authViewModel.clearError()
+                        navController.navigate("register")
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Registrarse ahora", color = Color(0xFF2E7D32))
+                }
+
+                Spacer(Modifier.height(16.dp))
+
+                Button(
+                    onClick = {
+                        authViewModel.clearError()
+                        navController.navigate("welcome")
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32)),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Volver al inicio", color = Color.White)
+                }
+            }
+            return
+        }
+
         Column(
             modifier = Modifier
                 .align(Alignment.Center)
                 .fillMaxWidth()
                 .padding(horizontal = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
             Text(
@@ -95,15 +149,12 @@ fun LoginScreen(
                 visualTransformation = if (passwordVisible)
                     VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
-                    val icon = if (passwordVisible)
-                        painterResource(id = R.drawable.ojo_cerrado)
-                    else
-                        painterResource(id = R.drawable.ojo_abierto)
-
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(
-                            painter = icon,
-                            contentDescription = "Toggle password",
+                            painter = painterResource(
+                                id = if (passwordVisible) R.drawable.ojo_cerrado else R.drawable.ojo_abierto
+                            ),
+                            contentDescription = null,
                             tint = Color.White
                         )
                     }
@@ -124,30 +175,24 @@ fun LoginScreen(
 
             Button(
                 onClick = {
-                    if (email.isBlank() || password.isBlank()) {
-                        errorMessage = "Completa todos los campos."
-                        return@Button
-                    }
-
+                    if (email.isBlank() || password.isBlank()) return@Button
                     authViewModel.login(email, password)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Ingresar",
+                    "Ingresar",
                     color = Color(0xFF2E7D32),
                     fontWeight = FontWeight.Bold
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            (authError ?: errorMessage)?.let { msg ->
+            loginError?.let { msg ->
                 Text(
-                    text = msg,
+                    text = if (msg != "NO_AUTH") msg else "",
                     color = Color.White,
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = Modifier.padding(top = 12.dp)
                 )
             }
         }

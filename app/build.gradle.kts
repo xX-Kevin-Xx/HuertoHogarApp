@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 
-    // Solo uno de kapt — este es el correcto
     id("org.jetbrains.kotlin.kapt")
 }
 

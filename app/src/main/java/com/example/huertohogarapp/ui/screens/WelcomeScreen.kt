@@ -25,9 +25,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.scale
+import com.example.huertohogarapp.viewmodels.AuthViewModel
 
 @Composable
-fun WelcomeScreen(navController: NavController) {
+fun WelcomeScreen(navController: NavController, authViewModel: AuthViewModel) {
 
     var startAnimation by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(
@@ -109,6 +110,27 @@ fun WelcomeScreen(navController: NavController) {
             ) {
                 Text("Ver Productos")
             }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(
+                onClick = {
+                    authViewModel.logout()
+                    navController.navigate("login") {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFD32F2F),
+                    contentColor = Color.White
+                )
+            ) {
+                Text("Cerrar sesión", fontWeight = FontWeight.Bold)
+            }
+
 
             Spacer(modifier = Modifier.height(150.dp))
 

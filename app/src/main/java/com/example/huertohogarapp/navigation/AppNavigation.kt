@@ -17,6 +17,7 @@ import com.example.huertohogarapp.ui.screens.WelcomeScreen
 import com.example.huertohogarapp.ui.screens.admin.AdminAddProductScreen
 import com.example.huertohogarapp.ui.screens.admin.AdminPanelScreen
 import com.example.huertohogarapp.ui.screens.admin.AdminProductsScreen
+import com.example.huertohogarapp.ui.screens.admin.AdminUserDetailScreen
 import com.example.huertohogarapp.ui.screens.admin.AdminUsersScreen
 import com.example.huertohogarapp.ui.screens.admin.EditProductScreen
 import com.example.huertohogarapp.ui.screens.products.ProductListScreen
@@ -51,7 +52,9 @@ fun AppNavigation(
         startDestination = "welcome"
     ) {
         composable("welcome") {
-            WelcomeScreen(navController = navController)
+            WelcomeScreen(
+                navController = navController,
+                authViewModel = authViewModel)
         }
 
         composable("home") {
@@ -79,7 +82,7 @@ fun AppNavigation(
         composable("register") {
             RegisterScreen(
                 navController = navController,
-                userViewModel = userViewModel
+                authViewModel = authViewModel
             )
         }
 
@@ -155,6 +158,24 @@ fun AppNavigation(
             val id = it.arguments?.getLong("id") ?: 0L
             EditProductScreen(navController, productApi, id)
         }
+
+        composable("adminUserDetail/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")?.toLong() ?: 0L
+
+            val adminUserVm: AdminUserViewModel = viewModel()
+            val authVm: AuthViewModel = viewModel()
+
+            AdminUserDetailScreen(
+                navController = navController,
+                viewModel = adminUserVm,
+                authViewModel = authVm,
+                userId = id
+            )
+        }
+
+
+
+
 
 
     }
